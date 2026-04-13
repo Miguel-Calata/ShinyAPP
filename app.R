@@ -1,4 +1,9 @@
-
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(scales)
+library(DT)
 
 # ==============================================================================
 # DATOS EMPIRICOS — Panel 2005-2024 (Japon y Corea del Sur)
