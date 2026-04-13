@@ -1,26 +1,15 @@
-FROM r-base:4.4.1
+FROM r-base:4.5.3
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libcurl4-openssl-dev \
-    libfontconfig1-dev \
-    libfreetype6-dev \
-    libfribidi-dev \
-    libharfbuzz-dev \
-    libicu-dev \
-    libjpeg-dev \
-    libpng-dev \
-    libssl-dev \
-    libtiff5-dev \
-    libuv1-dev \
-    libxml2-dev \
-    zlib1g-dev \
+    r-cran-dplyr \
+    r-cran-dt \
+    r-cran-ggplot2 \
+    r-cran-scales \
+    r-cran-shiny \
+    r-cran-tidyr \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-COPY packages.R /tmp/packages.R
-RUN Rscript /tmp/packages.R && rm -f /tmp/packages.R
 
 COPY . /app
 

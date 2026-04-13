@@ -1,5 +1,6 @@
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
+# Helper para instalar dependencias cuando se ejecuta la app fuera de Docker.
 required_packages <- c(
   "shiny",
   "ggplot2",
