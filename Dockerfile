@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     r-cran-scales \
     r-cran-shiny \
     r-cran-tidyr \
+    r-cran-sandwich \
+    r-cran-lmtest \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
