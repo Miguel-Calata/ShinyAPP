@@ -1,0 +1,41 @@
+﻿country_id,country,year,tourist_arrivals_thousands,tourism_receipts_billion_usd,tourism_receipts_per_arrival_usd,cultural_goods_exports_million_usd,music_exports_million_usd,unesco_world_heritage_sites,unesco_intangible_heritage_items,gdp_billion_usd,gdp_per_capita_usd,exchange_rate_lcu_usd,cpi_2010_100,fdi_inflow_billion_usd,hotel_rooms_thousand,broadband_per_100_inhabitants,covid_dummy,gfc_dummy,event_note
+1,Japan,2005,6728,12.4,1843,4500,,13,2,4831,37800,110.2,99.8,2.78,1480,17.4,0,0,APEC Korea / Aichi Expo Japan
+1,Japan,2006,7334,12,1636,4700,,13,4,4601,36000,116.3,100.1,-6.51,1510,20.2,0,0,
+1,Japan,2007,8347,11.3,1354,4900,,14,6,4579,35800,117.8,100.2,22.55,1540,22.1,0,0,
+1,Japan,2008,8351,12.1,1449,5100,,14,9,5106,39900,103.4,101.6,24.55,1570,23.7,0,1,Global Financial Crisis begins
+1,Japan,2009,6790,11.6,1708,4200,,14,11,5290,41400,93.6,100.2,11.94,1590,24.9,0,1,GFC continued / Swine flu
+1,Japan,2010,8611,13.4,1556,4800,,14,13,5759,44500,87.8,100,-1.25,1610,26.4,0,0,G-20 Seoul Summit
+1,Japan,2011,6219,11.1,1785,4600,,16,15,6233,48800,79.8,99.7,-1.76,1640,27,0,0,Great East Japan Earthquake (March 2011)
+1,Japan,2012,8358,14.6,1747,4900,,16,16,6272,49100,79.8,99.7,1.73,1670,27.7,0,0,Lee Myung-bak Dokdo visit / Japan-Korea tensions
+1,Japan,2013,10364,15.1,1457,5300,,17,18,5212,40900,97.6,100.1,2.3,1700,28.2,0,0,Visit Japan campaign intensifies (Abe)
+1,Japan,2014,13413,18.9,1409,5500,,18,19,4897,38500,105.9,102.8,9.07,1740,29,0,0,Korea: ferry Sewol disaster
+1,Japan,2015,19737,25,1267,5800,,19,21,4444,35000,121,103.6,5.25,1790,30.5,0,0,MERS outbreak Korea (May-July)
+1,Japan,2016,24039,30.7,1277,6100,,20,21,5003,39400,108.8,103.8,17.45,1850,31.5,0,0,THAAD deployment announced
+1,Japan,2017,28691,34.1,1189,6500,,21,21,4931,38900,112.2,104.3,9.39,1920,32.1,0,0,China tour ban Korea (THAAD effect)
+1,Japan,2018,31192,41.1,1318,6800,,22,22,5037,39800,110.4,105.4,9.86,2000,32.6,0,0,PyeongChang Winter Olympics Korea
+1,Japan,2019,31882,49.4,1549,6900,,23,22,5118,40500,109,106,14.55,2070,33.1,0,0,Japan-Korea trade dispute
+1,Japan,2020,4116,11.2,2721,5200,,24,22,5055,40100,106.8,106,10.25,2110,33.7,1,0,COVID-19 pandemic / Tokyo Olympics postponed
+1,Japan,2021,245,1.2,4898,5400,,25,22,5034,39800,109.8,105.8,24.65,2080,35.3,1,0,Tokyo Olympics 2020 (no spectators)
+1,Japan,2022,3832,12.8,3340,6200,,25,22,4256,33800,131.5,108.5,33.15,2030,36.9,1,0,Border reopening late 2022
+1,Japan,2023,25066,38.3,1528,7100,,25,22,4213,33700,140.5,112,20.95,2050,38.2,0,0,Full reopening / Korea-Japan tourism normalization
+1,Japan,2024,36870,53.3,1446,8200,,26,22,4070,32700,151.4,114.8,22.5,2080,39.5,0,0,Yen depreciation drives record JPN tourism
+2,Korea,2005,6023,5.8,963,1800,22.3,8,3,934,19400,1024.1,91,6.31,580,25.9,0,0,APEC Korea / Aichi Expo Japan
+2,Korea,2006,6155,6.4,1040,1900,16.6,9,5,1053,21700,954.8,93,4.88,600,29.1,0,0,
+2,Korea,2007,6448,6.9,1070,2000,13.9,9,6,1173,24100,929.2,95.4,1.58,615,30.5,0,0,
+2,Korea,2008,6891,9.7,1408,2100,16.5,9,8,1002,20500,1102.1,99.9,11.18,625,31.3,0,1,Global Financial Crisis begins
+2,Korea,2009,7818,9.8,1254,1950,31.3,9,9,944,19100,1276.9,102.7,8.96,640,32,0,1,GFC continued / Swine flu
+2,Korea,2010,8798,10.4,1182,2300,83.3,10,11,1144,22900,1156.1,103,9.5,680,35.3,0,0,G-20 Seoul Summit
+2,Korea,2011,9795,12.4,1266,2500,196.1,10,12,1253,24800,1108.3,107.2,9.77,720,36.6,0,0,Great East Japan Earthquake (March 2011)
+2,Korea,2012,11140,14.2,1275,2700,235.1,10,14,1278,25100,1126.5,109.5,9.49,780,37.6,0,0,Lee Myung-bak Dokdo visit / Japan-Korea tensions
+2,Korea,2013,12176,14.6,1199,2900,277.3,11,15,1370,26800,1095,110.9,12.77,850,38,0,0,Visit Japan campaign intensifies (Abe)
+2,Korea,2014,14202,17.7,1246,3100,335.7,11,17,1484,28900,1053,112.3,9.27,920,39.7,0,0,Korea: ferry Sewol disaster
+2,Korea,2015,13232,15.2,1149,3300,381.2,12,18,1466,28400,1131.5,113.1,4.1,1010,40.2,0,0,MERS outbreak Korea (May-July)
+2,Korea,2016,17242,17.2,998,3400,442.5,12,19,1500,29100,1160.3,114.2,12.1,1100,40.5,0,0,THAAD deployment announced
+2,Korea,2017,13336,13.4,1005,3600,512.6,12,19,1623,31500,1130.8,116.4,17.91,1190,41.6,0,0,China tour ban Korea (THAAD effect)
+2,Korea,2018,15347,18.5,1205,3700,564.2,13,20,1725,33400,1100.6,118.2,14.48,1280,41.6,0,0,PyeongChang Winter Olympics Korea
+2,Korea,2019,17502,21.5,1228,3800,756.2,14,20,1651,31900,1166.1,118.6,10.57,1340,41.6,0,0,Japan-Korea trade dispute
+2,Korea,2020,2519,7.6,3017,2900,679.6,15,21,1638,31700,1180.3,119.2,8.81,1360,43.6,1,0,COVID-19 pandemic / Tokyo Olympics postponed
+2,Korea,2021,967,4.1,4240,3500,826.7,15,21,1819,35200,1144.6,122.1,16.83,1340,44.5,1,0,Tokyo Olympics 2020 (no spectators)
+2,Korea,2022,3198,8.3,2595,3700,927.6,16,22,1674,32400,1291.4,128.4,18.46,1320,45.5,1,0,Border reopening late 2022
+2,Korea,2023,11032,16.5,1496,4100,1240,16,22,1713,33200,1305.4,133,14.07,1330,46.2,0,0,Full reopening / Korea-Japan tourism normalization
+2,Korea,2024,16370,24.6,1503,4500,1295,16,22,1870,36000,1364.1,136.1,12.5,1340,46.8,0,0,Yen depreciation drives record JPN tourism
