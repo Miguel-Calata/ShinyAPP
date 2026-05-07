@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     r-cran-dplyr \
     r-cran-dt \
     r-cran-ggplot2 \
+    r-cran-plm \
     r-cran-scales \
     r-cran-shiny \
     r-cran-tidyr \
