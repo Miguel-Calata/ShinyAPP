@@ -1,7 +1,7 @@
 suppressPackageStartupMessages({
   library(shiny)
   library(ggplot2)
-  library(plm)
+  library(plm)        
   library(dplyr)
   library(tidyr)
   library(scales)
@@ -206,7 +206,7 @@ extract_r_squared <- function(model) {
 manual_vif <- function(model) {
   matrix_x <- model.matrix(model)
   matrix_x <- matrix_x[, colnames(matrix_x) != "(Intercept)", drop = FALSE]
-
+  
   data.frame(
     term = colnames(matrix_x),
     vif = vapply(seq_len(ncol(matrix_x)), function(index) {
@@ -397,19 +397,19 @@ pesaran_cd_manual <- function(data, residuals_vector) {
     mutate(residual_diag = residuals_vector) %>%
     select(year, country_id, residual_diag) %>%
     tidyr::pivot_wider(names_from = country_id, values_from = residual_diag)
-
+  
   residual_matrix <- as.matrix(residual_data[, setdiff(names(residual_data), "year"), drop = FALSE])
   number_entities <- ncol(residual_matrix)
   number_periods <- nrow(residual_matrix)
   if (number_entities < 2) return(c(statistic = NA_real_, p_value = NA_real_))
-
+  
   correlations <- c()
   for (i in seq_len(number_entities - 1)) {
     for (j in (i + 1):number_entities) {
       correlations <- c(correlations, cor(residual_matrix[, i], residual_matrix[, j], use = "complete.obs"))
     }
   }
-
+  
   statistic <- sqrt(2 * number_periods / (number_entities * (number_entities - 1))) * sum(correlations)
   p_value <- 2 * (1 - pnorm(abs(statistic)))
   c(statistic = statistic, p_value = p_value)
@@ -426,18 +426,18 @@ wooldridge_manual <- function(data, residuals_vector) {
     ) %>%
     ungroup() %>%
     filter(!is.na(residual_difference), !is.na(residual_difference_lag))
-
+  
   if (nrow(wool_data) < 4) return(c(statistic = NA_real_, p_value = NA_real_))
-
+  
   wool_model <- lm(residual_difference ~ 0 + residual_difference_lag, data = wool_data)
   parameter <- coef(wool_model)[["residual_difference_lag"]]
   clustered_vcov <- sandwich::vcovCL(wool_model, cluster = wool_data$country_id, type = "HC1")
   clustered_se <- sqrt(diag(clustered_vcov))[["residual_difference_lag"]]
-
+  
   if (!is.finite(clustered_se) || clustered_se < 1e-8) {
     return(c(statistic = parameter, p_value = 0))
   }
-
+  
   z_value <- (parameter - (-0.5)) / clustered_se
   p_value <- 2 * (1 - pnorm(abs(z_value)))
   c(statistic = parameter, p_value = p_value)
@@ -446,9 +446,9 @@ wooldridge_manual <- function(data, residuals_vector) {
 dwh_manual <- function(data) {
   instrument_data <- data %>%
     filter(!is.na(culture_index_lag_model))
-
+  
   if (nrow(instrument_data) < 8) return(c(statistic = NA_real_, p_value = NA_real_))
-
+  
   first_stage <- lm(culture_index ~ culture_index_lag_model + log_gdppc + log_fx + country, data = instrument_data)
   instrument_data$first_stage_residual <- resid(first_stage)
   augmented_model <- lm(log_tourism ~ culture_index + log_gdppc + log_fx + country + first_stage_residual, data = instrument_data)
@@ -464,16 +464,16 @@ calculate_diagnostics <- function(data) {
   base_lm <- lm(base_formula, data = data)
   diagnostic_lm <- lm(diagnostic_formula, data = data)
   residuals_diag <- resid(diagnostic_lm)
-
+  
   fixed_test <- NULL
   random_test <- NULL
   hausman_test <- NULL
-
+  
   if (requireNamespace("plm", quietly = TRUE)) {
     pooled_plm <- safe_test(plm::plm(base_formula, data = data, index = c("country_id", "year"), model = "pooling"))
     fixed_plm <- safe_test(plm::plm(base_formula, data = data, index = c("country_id", "year"), model = "within"))
     random_plm <- safe_test(plm::plm(base_formula, data = data, index = c("country_id", "year"), model = "random", random.method = "amemiya"))
-
+    
     if (!is.null(pooled_plm) && !is.null(fixed_plm)) {
       fixed_test <- safe_test(plm::pFtest(fixed_plm, pooled_plm))
       random_test <- safe_test(plm::plmtest(pooled_plm, type = "bp"))
@@ -482,7 +482,7 @@ calculate_diagnostics <- function(data) {
       hausman_test <- safe_test(plm::phtest(fixed_plm, random_plm))
     }
   }
-
+  
   ramsey_test <- lmtest::resettest(diagnostic_lm, power = 2:3, type = "fitted")
   hetero_test <- lmtest::bptest(diagnostic_lm)
   durbin_test <- lmtest::dwtest(diagnostic_lm)
@@ -491,7 +491,7 @@ calculate_diagnostics <- function(data) {
   pesaran_test <- pesaran_cd_manual(data, residuals_diag)
   wooldridge_test <- wooldridge_manual(data, residuals_diag)
   dwh_test <- dwh_manual(data)
-
+  
   bind_rows(
     diagnostic_row(
       "Modelo agrupado contra efectos fijos",
@@ -1433,7 +1433,7 @@ ui <- fluidPage(
       }
     "))
   ),
-
+  
   div(
     class = "app-header",
     tags$h1("Cultura, exportación audiovisual aproximada y turismo internacional"),
@@ -1441,7 +1441,7 @@ ui <- fluidPage(
     div(class = "fuentes", "App de exposición: resultados, decisiones metodológicas, diagnósticos, limitaciones y diálogo con literatura"),
     div(class = "equipo-tag", "Equipo 3 · Inteligencia de Negocios · 2026")
   ),
-
+  
   div(
     class = "kpi-bar",
     div(class = "kpi-item", div(class = "kpi-val neu", textOutput("kpi_nobs")), div(class = "kpi-lbl", "Observaciones del modelo")),
@@ -1451,7 +1451,7 @@ ui <- fluidPage(
     div(class = "kpi-item", div(class = "kpi-val ok", textOutput("kpi_pvalue")), div(class = "kpi-lbl", "Valor p índice cultural")),
     div(class = "kpi-item", div(class = "kpi-val neu", textOutput("kpi_r2")), div(class = "kpi-lbl", "Coeficiente de determinación"))
   ),
-
+  
   div(
     class = "body-wrap",
     div(
@@ -1481,13 +1481,13 @@ ui <- fluidPage(
         "Los filtros de periodo y país afectan gráficas y tablas descriptivas. Los modelos se calculan con la muestra definida: sin 2020 ni 2021. El selector Base/Rezagado sí cambia los resultados del modelo visible."
       )
     ),
-
+    
     div(
       class = "main-area",
       tabsetPanel(
         type = "tabs",
         id = "tabs",
-
+        
         tabPanel(
           "Inicio",
           div(
@@ -1573,7 +1573,7 @@ ui <- fluidPage(
             )
           )
         ),
-
+        
         tabPanel(
           "Marco e hipótesis",
           div(
@@ -1612,7 +1612,7 @@ ui <- fluidPage(
             DTOutput("research_questions_table")
           )
         ),
-
+        
         tabPanel(
           "Datos y variables",
           div(
@@ -1681,7 +1681,7 @@ ui <- fluidPage(
             DTOutput("data_table_preview")
           )
         ),
-
+        
         tabPanel(
           "Exploración visual",
           fluidRow(
@@ -1742,7 +1742,7 @@ ui <- fluidPage(
             div(class = "plot-caption", "Las correlaciones altas entre variables explicativas (índice cultural y PIB per cápita ≈ 0.645) se interpretan junto con los factores de inflación de la varianza en la pestaña Modelos y resultados.")
           )
         ),
-
+        
         tabPanel(
           "Modelos y resultados",
           div(
@@ -1803,7 +1803,7 @@ ui <- fluidPage(
             )
           )
         ),
-
+        
         tabPanel(
           "Diagnóstico y limitaciones",
           fluidRow(
@@ -1939,7 +1939,7 @@ ui <- fluidPage(
             )
           )
         ),
-
+        
         tabPanel(
           "Conclusiones y literatura",
           div(
@@ -1992,7 +1992,7 @@ server <- function(input, output, session) {
   filtered_data <- reactive({
     out <- panel %>%
       filter(year >= input$year_range[1], year <= input$year_range[2])
-
+    
     if (input$country_select != "both") {
       out <- out %>% filter(as.character(country) == input$country_select)
     }
@@ -2001,29 +2001,29 @@ server <- function(input, output, session) {
     }
     out
   })
-
+  
   selected_result <- reactive({
     choice <- input$model_choice
     if (is.null(choice) || !(choice %in% names(model_results))) choice <- "base"
     model_results[[choice]]
   })
-
+  
   selected_model_data <- reactive({
     if (identical(selected_result()$key, "lag")) model_data_lag else model_data
   })
-
+  
   selected_culture_row <- reactive({
     result <- selected_result()
     result$coef_table %>% filter(term == result$culture_term)
   })
-
+  
   output$kpi_nobs <- renderText(nobs(selected_result()$model))
   output$kpi_model <- renderText(selected_result()$short_label)
   output$kpi_beta <- renderText(sprintf("%.3f", selected_culture_row()$estimate))
   output$kpi_percent <- renderText(paste0(sprintf("%.1f", (exp(selected_culture_row()$estimate) - 1) * 100), "%"))
   output$kpi_pvalue <- renderText(format_p(selected_culture_row()$p_value))
   output$kpi_r2 <- renderText(sprintf("%.3f", selected_result()$r_squared))
-
+  
   output$equation_text <- renderUI({
     result <- selected_result()
     coefficients <- coef(result$model)
@@ -2114,7 +2114,7 @@ server <- function(input, output, session) {
       result$r_squared
     ))
   })
-
+  
   output$selected_model_sample <- renderUI({
     result <- selected_result()
     if (identical(result$key, "base")) {
@@ -2123,12 +2123,12 @@ server <- function(input, output, session) {
       HTML("El modelo rezagado usa 34 observaciones porque pierde el primer año disponible de cada país al construir el rezago del índice cultural.")
     }
   })
-
+  
   output$plot_coefficients <- renderPlot({
     plot_data <- selected_result()$coef_table %>%
       filter(term != "(Intercept)") %>%
       mutate(term_label = factor(term_label, levels = rev(term_label)))
-
+    
     ggplot(plot_data, aes(x = term_label, y = estimate, color = significant)) +
       geom_hline(yintercept = 0, color = "#aaa", linewidth = 0.6) +
       geom_pointrange(aes(ymin = conf_low, ymax = conf_high), linewidth = 0.8, size = 0.9) +
@@ -2138,11 +2138,11 @@ server <- function(input, output, session) {
       theme(legend.position = "none") +
       labs(x = NULL, y = "Coeficiente estimado")
   })
-
+  
   output$plot_tourism <- renderPlot({
     y_var <- if (isTRUE(input$use_log_axis)) "log_tourism" else "arrivals_million"
     y_lab <- if (isTRUE(input$use_log_axis)) "Logaritmo de llegadas" else "Millones de llegadas"
-
+    
     plot_data <- filtered_data()
     p <- ggplot(plot_data, aes(x = year, y = .data[[y_var]], color = country)) +
       geom_line(linewidth = 1) +
@@ -2151,11 +2151,11 @@ server <- function(input, output, session) {
       theme_eq3() +
       scale_x_continuous(breaks = sort(unique(plot_data$year))) +
       labs(x = NULL, y = y_lab)
-
+    
     if (!isTRUE(input$exclude_model_years)) p <- add_model_exclusion_band(p)
     p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
   })
-
+  
   output$plot_culture <- renderPlot({
     plot_data <- filtered_data()
     p <- ggplot(plot_data, aes(x = year, y = culture_index, color = country)) +
@@ -2166,11 +2166,11 @@ server <- function(input, output, session) {
       theme_eq3() +
       scale_x_continuous(breaks = sort(unique(plot_data$year))) +
       labs(x = NULL, y = "Índice cultural")
-
+    
     if (!isTRUE(input$exclude_model_years)) p <- add_model_exclusion_band(p)
     p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
   })
-
+  
   output$plot_components <- renderPlot({
     plot_data <- filtered_data() %>%
       select(country, year, cultural_goods_exports_million_usd, unesco_world_heritage_sites, unesco_intangible_heritage_items) %>%
@@ -2187,7 +2187,7 @@ server <- function(input, output, session) {
           unesco_intangible_heritage_items = "Patrimonio intangible UNESCO"
         )
       )
-
+    
     ggplot(plot_data, aes(x = year, y = value, color = country)) +
       geom_line(linewidth = 0.9) +
       geom_point(size = 1.5) +
@@ -2198,7 +2198,7 @@ server <- function(input, output, session) {
       scale_x_continuous(breaks = sort(unique(plot_data$year))) +
       labs(x = NULL, y = NULL)
   })
-
+  
   output$plot_scatter <- renderPlot({
     plot_data <- filtered_data()
     p <- ggplot(plot_data, aes(x = culture_index, y = log_tourism, color = country)) +
@@ -2207,13 +2207,13 @@ server <- function(input, output, session) {
       scale_country_color() +
       theme_eq3() +
       labs(x = "Índice cultural", y = "Logaritmo de llegadas turísticas", shape = NULL)
-
+    
     if (isTRUE(input$show_labels)) {
       p <- p + geom_text(aes(label = year), color = "#333", size = 2.8, nudge_y = 0.04)
     }
     p
   })
-
+  
   output$sources_table <- renderDT({
     data_sources %>%
       transmute(
@@ -2222,7 +2222,7 @@ server <- function(input, output, session) {
         `Decisión metodológica` = decision
       )
   }, options = dt_options(page_length = 5, dom = "t"), rownames = FALSE)
-
+  
   output$hypotheses_table <- renderDT({
     hypotheses_table %>%
       transmute(
@@ -2233,7 +2233,7 @@ server <- function(input, output, session) {
         `Lectura defendible` = lectura_defendible
       )
   }, options = dt_options(page_length = 4, dom = "t"), rownames = FALSE)
-
+  
   output$research_questions_table <- renderDT({
     research_questions_table %>%
       transmute(
@@ -2242,7 +2242,7 @@ server <- function(input, output, session) {
         Implicación = implicacion
       )
   }, options = dt_options(page_length = 3, dom = "t"), rownames = FALSE)
-
+  
   output$culture_components_decisions_table <- renderDT({
     culture_index_components %>%
       transmute(
@@ -2251,7 +2251,7 @@ server <- function(input, output, session) {
         Límite = limite
       )
   }, options = dt_options(page_length = 3, dom = "t"), rownames = FALSE)
-
+  
   output$variable_decisions_table <- renderDT({
     variable_decisions %>%
       transmute(
@@ -2261,7 +2261,7 @@ server <- function(input, output, session) {
         Justificación = justificacion
       )
   }, options = dt_options(page_length = 8, dom = "t"), rownames = FALSE)
-
+  
   output$discarded_variables_table <- renderDT({
     discarded_variables %>%
       transmute(
@@ -2270,7 +2270,7 @@ server <- function(input, output, session) {
         `Cómo reportarlo` = como_reportarlo
       )
   }, options = dt_options(page_length = 9, dom = "t"), rownames = FALSE)
-
+  
   output$data_table_preview <- renderDT({
     filtered_data() %>%
       transmute(
@@ -2283,7 +2283,7 @@ server <- function(input, output, session) {
         `Muestra del modelo` = model_status
       )
   }, options = dt_options(page_length = 8, dom = "ftp"), rownames = FALSE)
-
+  
   output$descriptive_summary_table <- renderDT({
     model_data %>%
       transmute(
@@ -2306,7 +2306,7 @@ server <- function(input, output, session) {
       mutate(valor = round(valor, 3)) %>%
       pivot_wider(names_from = Estadístico, values_from = valor)
   }, options = dt_options(page_length = 4, dom = "t"), rownames = FALSE)
-
+  
   output$model_comparison_table <- renderDT({
     model_comparison_table %>%
       transmute(
@@ -2612,7 +2612,7 @@ server <- function(input, output, session) {
         legend.text   = element_text(size = 9)
       )
   })
-
+  
   output$plot_model_comparison <- renderPlot({
     plot_data <- bind_rows(lapply(model_results, function(result) {
       result$coef_table %>%
@@ -2620,7 +2620,7 @@ server <- function(input, output, session) {
         mutate(modelo = result$label)
     })) %>%
       mutate(modelo = factor(modelo, levels = rev(unique(modelo))))
-
+    
     ggplot(plot_data, aes(x = modelo, y = estimate, color = significant)) +
       geom_hline(yintercept = 0, color = "#aaa", linewidth = 0.6) +
       geom_pointrange(aes(ymin = conf_low, ymax = conf_high), linewidth = 0.8, size = 0.9) +
@@ -2630,7 +2630,7 @@ server <- function(input, output, session) {
       theme(legend.position = "none") +
       labs(x = NULL, y = "Coeficiente cultural")
   })
-
+  
   output$coef_table <- renderDT({
     selected_result()$coef_table %>%
       transmute(
@@ -2643,13 +2643,13 @@ server <- function(input, output, session) {
         `Límite superior 95%` = round(conf_high, 4)
       )
   }, options = dt_options(page_length = 5, dom = "t"), rownames = FALSE)
-
+  
   output$plot_fitted <- renderPlot({
     plot_data <- selected_model_data() %>%
       select(country, year, log_tourism, fitted) %>%
       pivot_longer(cols = c(log_tourism, fitted), names_to = "series", values_to = "value") %>%
       mutate(series = recode(series, log_tourism = "Observado", fitted = "Ajustado"))
-
+    
     ggplot(plot_data, aes(x = year, y = value, color = country, linetype = series)) +
       geom_line(linewidth = 0.95) +
       geom_point(size = 1.6) +
@@ -2660,7 +2660,7 @@ server <- function(input, output, session) {
       scale_x_continuous(breaks = sort(unique(plot_data$year))) +
       labs(x = NULL, y = "Logaritmo de llegadas")
   })
-
+  
   output$plot_residuals <- renderPlot({
     ggplot(selected_model_data(), aes(x = fitted, y = residual, color = country)) +
       geom_hline(yintercept = 0, color = "#bc002d", linewidth = 0.6) +
@@ -2669,7 +2669,7 @@ server <- function(input, output, session) {
       theme_eq3() +
       labs(x = "Valor ajustado", y = "Residuo")
   })
-
+  
   output$diagnostic_cards <- renderUI({
     tags$div(
       class = "test-grid",
@@ -2690,7 +2690,7 @@ server <- function(input, output, session) {
       })
     )
   })
-
+  
   output$plot_residual_distribution <- renderPlot({
     ggplot(selected_model_data(), aes(x = residual, fill = country)) +
       geom_histogram(position = "identity", bins = 10, alpha = 0.55, color = "white") +
@@ -2833,17 +2833,17 @@ server <- function(input, output, session) {
         `Cómo defenderla` = como_defenderla
       )
   }, options = dt_options(page_length = 8, dom = "t"), rownames = FALSE)
-
+  
   output$literature_cards <- renderUI({
     badge_class <- function(rel) {
-      if (grepl("coincidencia|coincide|directa|positivo y significativo", rel, ignore.case = TRUE)) "lit-badge-box lit-badge-direct"
-      else if (grepl("Refuerza|Respalda|Apoya el caso|Ayuda a interpretar|Ubica el proyecto", rel, ignore.case = TRUE)) "lit-badge-box lit-badge-partial"
+      if (grepl("coincidencia|coincide|directa|positivo y significativo|Refuerza|Respalda la cautela", rel, ignore.case = TRUE)) "lit-badge-box lit-badge-direct"
+      else if (grepl("Respalda|Apoya el caso|Ayuda a interpretar|Ubica el proyecto", rel, ignore.case = TRUE)) "lit-badge-box lit-badge-partial"
       else "lit-badge-box lit-badge-limit"
     }
     badge_label <- function(rel) {
       if (grepl("coincidencia|coincide|directa|positivo y significativo", rel, ignore.case = TRUE)) "Coincide con H1"
       else if (grepl("Refuerza", rel, ignore.case = TRUE)) "Apoya el mecanismo"
-      else if (grepl("Respalda la cautela", rel, ignore.case = TRUE)) "Aporta cautela"
+      else if (grepl("Respalda la cautela", rel, ignore.case = TRUE)) "Coincide en conclusión"
       else if (grepl("Apoya el caso", rel, ignore.case = TRUE)) "Apoya parcialmente"
       else if (grepl("Ayuda a interpretar", rel, ignore.case = TRUE)) "Contexto"
       else if (grepl("Ubica el proyecto", rel, ignore.case = TRUE)) "Aporta contexto"
