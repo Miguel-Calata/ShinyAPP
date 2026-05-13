@@ -1,31 +1,18 @@
-FROM rocker/r-ver:4.5.3
+FROM rocker/r2u:jammy
 
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    gfortran \
-    pkg-config \
-    libuv1-dev \
-    libcairo2-dev \
-    libxt-dev \
-    libx11-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libxml2-dev \
-    libfontconfig1-dev \
-    libharfbuzz-dev \
-    libfribidi-dev \
-    libfreetype6-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libtiff5-dev \
-    libicu-dev \
+    r-cran-shiny \
+    r-cran-ggplot2 \
+    r-cran-dplyr \
+    r-cran-tidyr \
+    r-cran-scales \
+    r-cran-dt \
+    r-cran-plm \
+    r-cran-sandwich \
+    r-cran-lmtest \
     && rm -rf /var/lib/apt/lists/*
-
-COPY packages.R /app/packages.R
-RUN Rscript /app/packages.R
 
 COPY . /app
 
