@@ -2065,9 +2065,9 @@ server <- function(input, output, session) {
     )
 
     generic_line <- if (result$key == "lag")
-      "log(T<sub>it</sub>) = &beta;<sub>0</sub> + &beta;<sub>1</sub>&#183;&#205;ndice<sub>i,t&#8722;1</sub> + &beta;<sub>2</sub>&#183;log(PIBpc<sub>it</sub>) + &beta;<sub>3</sub>&#183;log(TC<sub>it</sub>) + &epsilon;<sub>it</sub>"
+      "log(T<sub>it</sub>) = &beta;<sub>1</sub>&#183;&#205;ndice<sub>i,t&#8722;1</sub> + &beta;<sub>2</sub>&#183;log(PIBpc<sub>it</sub>) + &beta;<sub>3</sub>&#183;log(TC<sub>it</sub>) + &alpha;<sub>i</sub> + u<sub>it</sub>"
     else
-      "log(T<sub>it</sub>) = &beta;<sub>0</sub> + &beta;<sub>1</sub>&#183;&#205;ndice<sub>it</sub> + &beta;<sub>2</sub>&#183;log(PIBpc<sub>it</sub>) + &beta;<sub>3</sub>&#183;log(TC<sub>it</sub>) + &epsilon;<sub>it</sub>"
+      "log(T<sub>it</sub>) = &beta;<sub>1</sub>&#183;&#205;ndice<sub>it</sub> + &beta;<sub>2</sub>&#183;log(PIBpc<sub>it</sub>) + &beta;<sub>3</sub>&#183;log(TC<sub>it</sub>) + &alpha;<sub>i</sub> + u<sub>it</sub>"
 
     sprintf(
       "<div class='eq-hero-wrap'>
