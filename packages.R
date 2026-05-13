@@ -26,6 +26,6 @@ if (length(missing_packages) > 0) {
   install.packages(
     missing_packages,
     repos        = "https://cloud.r-project.org",
-    dependencies = TRUE
+    dependencies = c("Depends", "Imports", "LinkingTo")
   )
 }
