@@ -3,6 +3,10 @@ FROM rocker/r-ver:4.5.3
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    gfortran \
+    libuv1-dev \
     libcurl4-openssl-dev \
     libssl-dev \
     libxml2-dev \
@@ -13,9 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libjpeg-dev \
     libtiff5-dev \
-    build-essential \
-    cmake \
-    gfortran \
     && rm -rf /var/lib/apt/lists/*
 
 COPY packages.R /app/packages.R

@@ -1,18 +1,11 @@
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-install_if_missing <- function(pkgs) {
-  missing <- pkgs[!pkgs %in% rownames(installed.packages())]
-  if (length(missing) > 0) {
-    install.packages(missing, repos = "https://cloud.r-project.org")
-  }
-}
-
-# Dependencias de bajo nivel que deben instalarse primero
-install_if_missing(c("fs", "sass", "bslib", "nloptr"))
-
-# Paquetes usados directamente por app.R
-# zoo y quantmod se incluyen como dependencias transitivas posibles
-install_if_missing(c(
+packages <- c(
+  # Cadena de dependencias de shiny (deben resolverse antes)
+  "fs",
+  "sass",
+  "bslib",
+  # Paquetes usados directamente por app.R (library())
   "shiny",
   "ggplot2",
   "dplyr",
@@ -22,6 +15,17 @@ install_if_missing(c(
   "plm",
   "sandwich",
   "lmtest",
+  # Dependencias transitivas incluidas por precaución
   "zoo",
   "quantmod"
-))
+)
+
+missing_packages <- packages[!packages %in% rownames(installed.packages())]
+
+if (length(missing_packages) > 0) {
+  install.packages(
+    missing_packages,
+    repos        = "https://cloud.r-project.org",
+    dependencies = TRUE
+  )
+}
