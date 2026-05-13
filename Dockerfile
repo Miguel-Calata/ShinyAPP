@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjpeg-dev \
     libtiff5-dev \
     build-essential \
+    cmake \
+    gfortran \
     && rm -rf /var/lib/apt/lists/*
 
 COPY packages.R /app/packages.R
